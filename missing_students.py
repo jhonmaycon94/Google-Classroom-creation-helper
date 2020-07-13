@@ -20,9 +20,9 @@ alunos_from_ws = normatizar(alunos_from_ws)
 
 tb_alunos = pyperclip.paste()
 
-alunos_unicode = re.findall(r"(\b[A-Z][^\d]{1,}\t\t)", tb_alunos)
+tb_alunos = tb_alunos.split("\n")
 
-alunos = normatizar(alunos_unicode) 
+alunos = normatizar(tb_alunos) 
 
 final_list = []
 
@@ -31,10 +31,5 @@ qtd = 0
 for aluno in alunos:
     match = [aluno_ws for aluno_ws in alunos_from_ws if aluno in aluno_ws]
     if not match:
-        continue 
-    qtd = qtd + 1
-    match = "\n".join(match)
-    final_list.append(str(qtd)+" "+match)
-    
-pyperclip.copy("\n".join(final_list))
-
+        qtd = qtd + 1
+        print(str(qtd)+" "+aluno)
