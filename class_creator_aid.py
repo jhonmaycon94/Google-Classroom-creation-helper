@@ -25,6 +25,7 @@ alunos_unicode = re.findall(r"(\b[A-Z][^\d]{1,}\t\t)", tb_alunos)
 alunos = normatizar(alunos_unicode) 
 
 final_list = []
+alunos_sem_email = []
 
 qtd = 0
 
@@ -35,6 +36,15 @@ for aluno in alunos:
     qtd = qtd + 1
     match = "\n".join(match)
     final_list.append(str(qtd)+" "+match)
+    if '@' not in match:
+        alunos_sem_email.append(match)
     
 pyperclip.copy("\n".join(final_list))
+
+print(str(qtd)+" Alunos copiados para área de transferencia\n")
+if alunos_sem_email:
+    print("ALUNOS SEM EMAIL:\n")
+    for aluno in alunos_sem_email:
+        print(aluno)
+
 

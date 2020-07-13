@@ -18,19 +18,6 @@ for i in range(1, ws_alunos.max_row):
 
 alunos_from_ws = normatizar(alunos_from_ws)
 
-#database to compare
-
-alunos_copiados = pyperclip.paste()
-alunos_copiados = alunos_copiados.split("\n")
-alunos_copiados = normatizar(alunos_copiados) 
-
-final_list = []
-
-qtd = 0
-
-for aluno in alunos_copiados:
-    match = [aluno_ws for aluno_ws in alunos_from_ws if aluno in aluno_ws]
-    if not match:
-        qtd = qtd + 1
+for aluno in alunos_from_ws:
+    if '@' not in aluno:
         print(aluno)
-print(str(qtd)+" ALUNOS\n")
