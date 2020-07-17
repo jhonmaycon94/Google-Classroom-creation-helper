@@ -21,6 +21,11 @@ alunos_from_ws = normatizar(alunos_from_ws)
 tb_alunos = pyperclip.paste()
 
 alunos_unicode = re.findall(r"(\b[A-Z][^\d]{1,}\t\t)", tb_alunos)
+if not alunos_unicode:
+    tb_alunos = str(tb_alunos).split("\n")
+    tb_alunos = normatizar(tb_alunos)
+    tb_alunos = "\n".join(tb_alunos)
+    alunos_unicode = re.findall(r"((?<=\d\t)[A-Z ]{3,})", tb_alunos)
 
 alunos = normatizar(alunos_unicode) 
 
