@@ -30,22 +30,22 @@ def search_student_in_sheet(copied_students, alunos_from_sheet):
         match = [aluno_ws for aluno_ws in alunos_from_sheet if aluno in aluno_ws]
         if not match:
             continue
-        alunos.append(match)
+        alunos.append(match[0])
     return alunos
 
 def alunos_without_email(alunos):
-    alunos = []
+    sem_email = []
     for aluno in alunos:
         if "@" not in aluno:
-            alunos.append(aluno)
-    return alunos
+            sem_email.append(aluno)
+    return sem_email
 
 def alunos_to_clipboard(alunos):
     pyperclip.copy("\n".join(alunos))
 
 def format_output(alunos, alunos_sem_email):
     qnt = len(alunos)
-    print(str(qnt)+" Alunos copiados para área de transferencia\n")
+    print(str(qnt)+" Alunos copiados para área de transferência\n")
     if alunos_sem_email: 
         print("ALUNOS SEM EMAIL:\n")
         for aluno in alunos_sem_email:
@@ -60,9 +60,8 @@ copied_students = pyperclip.paste()
 alunos = extract_students_from_copy(copied_students)
 
 alunos_para_copiar = search_student_in_sheet(alunos, alunos_from_ws)
-alunos_sem_email = alunos_without_email(alunos_to_clipboard)
-    for aluno 
-#alunos_to_clipboard(alunos_para_copiar)
+alunos_sem_email = alunos_without_email(alunos_para_copiar)
+alunos_to_clipboard(alunos_para_copiar)
 format_output(alunos_para_copiar, alunos_sem_email)
 
 
