@@ -63,6 +63,3 @@ alunos_para_copiar = search_student_in_sheet(alunos, alunos_from_ws)
 alunos_sem_email = alunos_without_email(alunos_para_copiar)
 alunos_to_clipboard(alunos_para_copiar)
 format_output(alunos_para_copiar, alunos_sem_email)
-
-
-
