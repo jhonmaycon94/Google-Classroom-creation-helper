@@ -1,3 +1,6 @@
+# Python Utilitarian to help IFS-Campus Estancia create Google Classroom classes
+# Author: Jhon Santos 
+
 import tkinter as tk
 import tkinter.scrolledtext as scrolledtext
 import creatorAid
@@ -13,7 +16,7 @@ class Application(tk.Frame):
 
     def create_widgets(self):
         #Title
-        self.master.title("Classroom Creator Aid")
+        self.master.title("Classroom Creation Helper")
 
         #Frame
         self.mainFrame = tk.Frame(self.master, bg='white')
