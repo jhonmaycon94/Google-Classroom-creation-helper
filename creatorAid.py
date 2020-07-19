@@ -1,5 +1,8 @@
 import pyperclip, re, unicodedata, openpyxl
 
+alunos = ''
+alunos_s_email = ''
+
 def normatizar(alunos):
     alunos_formatados = []
     for aluno in alunos:
@@ -43,23 +46,38 @@ def alunos_without_email(alunos):
 def alunos_to_clipboard(alunos):
     pyperclip.copy("\n".join(alunos))
 
-def format_output(alunos, alunos_sem_email):
+def output(alunos):
     qnt = len(alunos)
-    print(str(qnt)+" Alunos copiados para área de transferência\n")
-    if alunos_sem_email: 
-        print("ALUNOS SEM EMAIL:\n")
+
+    if qnt == 0:
+        output = "Nenhum aluno copiado para área de transferência\n"
+    elif qnt == 1:
+        output = str(qnt)+" Aluno copiado para área de transferência\n"
+    else:        
+        output = str(qnt)+" Alunos copiados para área de transferência\n"
+    return output
+
+def sem_email_to_print(alunos_sem_email):
+    if alunos_sem_email:
+        output = "ALUNOS SEM EMAIL: \n"
         for aluno in alunos_sem_email:
-            print(aluno)
+            output = output + "\n" + aluno
+        return output    
 
-wb = openpyxl.load_workbook("emails academicos.xlsx")
-ws_alunos = wb['Planilha1']
-alunos_from_ws = load_students_from_sheet(ws_alunos)
-alunos_from_ws = normatizar(alunos_from_ws)    
 
-copied_students = pyperclip.paste()
-alunos = extract_students_from_copy(copied_students)
+def execute():
+    global alunos, alunos_s_email
 
-alunos_para_copiar = search_student_in_sheet(alunos, alunos_from_ws)
-alunos_sem_email = alunos_without_email(alunos_para_copiar)
-alunos_to_clipboard(alunos_para_copiar)
-format_output(alunos_para_copiar, alunos_sem_email)
+    wb = openpyxl.load_workbook("emails academicos.xlsx")
+    ws_alunos = wb['Planilha1']
+    alunos_from_ws = load_students_from_sheet(ws_alunos)
+    alunos_from_ws = normatizar(alunos_from_ws)    
+
+    copied_students = pyperclip.paste()
+    alunos = extract_students_from_copy(copied_students)
+
+    alunos_para_copiar = search_student_in_sheet(alunos, alunos_from_ws)
+    alunos_sem_email = alunos_without_email(alunos_para_copiar)
+    alunos_to_clipboard(alunos_para_copiar)
+    alunos = alunos_para_copiar
+    alunos_s_email = alunos_sem_email
