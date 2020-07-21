@@ -5,7 +5,7 @@ Author: Jhon Santos
 
 import tkinter as tk
 import tkinter.scrolledtext as scrolledtext
-import creatorAid
+import class_creation_helper
 import openpyxl
 import pyperclip
 
@@ -27,23 +27,24 @@ class Application(tk.Frame):
         self.mainFrame.pack(fill=tk.BOTH, expand=1)
 
         # Label
-        self.output_lb = tk.Label(self.mainFrame,
-                                  text="""Lista de alunos copiados
-                                   para área de transferencia:""",
-                                  font=('Swis721 Blk BT', 9),
-                                  anchor=tk.W,
-                                  bg='#0F59A8',
-                                  fg='white',
-                                  padx=5
-                                  )
+        self.output_lb = tk.Label(
+                            self.mainFrame,
+                            text="""Lista de alunos copiados para área de transferencia:""",
+                            font=('Swis721 Blk BT', 9),
+                            anchor=tk.W,
+                            bg='#0F59A8',
+                            fg='white',
+                            padx=5
+                            )
         self.output_lb.pack(anchor=tk.SW, pady=(10, 0), padx=20)
 
         # TextArea
         self.output_txt = scrolledtext.ScrolledText(self.mainFrame,
                                                     width=60,
                                                     height=16,
-                                                    font=('Nirmala UI',
-                                                          8),
+                                                    font=(
+                                                        'Nirmala UI', 8
+                                                        ),
                                                     pady=10,
                                                     padx=10,
                                                     bg='#CCDBDB',
@@ -92,11 +93,11 @@ class Application(tk.Frame):
         self.output_sem_email.configure(state='normal')
         self.output_sem_email.delete('1.0', 'end')
 
-        creatorAid.execute()
+        class_creation_helper.execute()
 
         # Alunos TextArea
         qtd = 0
-        for aluno in creatorAid.alunos:
+        for aluno in class_creation_helper.alunos:
             qtd += 1
             self.output_txt.insert('end', str(qtd)+".  "+aluno+"\n\n")
         self.output_txt.configure(state='disabled')
@@ -104,7 +105,7 @@ class Application(tk.Frame):
 
         # Alunos sem email TextArea
         qtd = 0
-        for aluno in creatorAid.alunos_s_email:
+        for aluno in class_creation_helper.alunos_s_email:
             qtd += 1
             self.output_sem_email.insert('end', str(qtd)+".  "+aluno+"\n\n")
         self.output_sem_email.configure(state='disabled')
