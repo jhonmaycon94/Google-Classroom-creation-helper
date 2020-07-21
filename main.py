@@ -67,8 +67,9 @@ class Application(tk.Frame):
                                                           width=50,
                                                           pady=10,
                                                           padx=10,
-                                                          font=('Nirmala UI',
-                                                                8),
+                                                          font=(
+                                                              'Nirmala UI', 8
+                                                                ),
                                                           height=10,
                                                           bg='#CCDBDB',
                                                           borderwidth=1,
