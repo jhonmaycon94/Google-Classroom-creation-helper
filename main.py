@@ -94,7 +94,7 @@ class Application(tk.Frame):
         self.output_sem_email.configure(state='normal')
         self.output_sem_email.delete('1.0', 'end')
 
-        gcch = GoogleClassCreationHelper(pyperclip.paste())
+        gcch = GoogleClassCreationHelper()
         gcch.execute()
 
         # Alunos TextArea
