@@ -3,93 +3,74 @@ import re
 import pyperclip
 import openpyxl
 
-alunos = ''
-alunos_s_email = ''
 
+class GoogleClassCreationHelper:
 
-def normatizar(alunos):
-    alunos_formatados = []
+    def __init__(self, clipboard_copy):
+        self.clipboard_copy = clipboard_copy
 
-    for aluno in alunos:
-        # tira acentos e ç dos nomes dos alunos
-        aluno = unicodedata.normalize(
-            "NFKD", aluno.strip()).encode(
-                "ascii", "ignore").decode("ascii")
-        aluno = aluno.upper().strip()
-        alunos_formatados.append(aluno)
+    @staticmethod
+    def normatize(students): 
+        for indice, student in enumerate(students):
+            # tira acentos e ç dos nomes dos alunos
+            student = unicodedata.normalize(
+                "NFKD", student.strip()).encode(
+                    "ascii", "ignore").decode("ascii")
+            student = student.upper().strip()
+            students[indice] = student
+        return students
 
-    return alunos_formatados
+    def extract_students_from_SIGAA(self):
+        # Regex para extrair todos alunos do integrado/subsequente
+        students = re.findall(r"(\b[A-Z][^\d]{1,}\t\t)", self.clipboard_copy)
+        students = self.normatize(students)
 
+        '''
+        Se não conseguir extrair alunos da string,
+        checa se os alunos são de engenharia
+        usando uma Regex diferente
+        '''
+        if not students:
+            self.clipboard_copy = str(self.clipboard_copy).split("\n")
+            self.clipboard_copy = self.normatize(self.clipboard_copy)
+            self.clipboard_copy = "\n".join(self.clipboard_copy)
+            students = re.findall(r"((?<=\d\t)[A-Z ]{3,})", self.clipboard_copy)
+        return students
 
-def extract_students_from_copy(copy):
-    # Regex para extrair todos alunos do integrado/subsequente
-    alunos = re.findall(r"(\b[A-Z][^\d]{1,}\t\t)", copy)
-    alunos = normatizar(alunos)
+    @staticmethod
+    def load_students_from_sheet(sheet):
+        students = []
+        last_row = sheet.max_row
+        for i in range(1, last_row):
+            student = sheet.cell(row=i, column=1).value
+            students.append(student)
+        return students
 
-    '''
-    Se não conseguir extrair alunos da string,
-    checa se os alunos são de engenharia
-    usando uma Regex diferente
-    '''
-    if not alunos:
-        copy = str(copy).split("\n")
-        copy = normatizar(copy)
-        copy = "\n".join(copy)
-        alunos = re.findall(r"((?<=\d\t)[A-Z ]{3,})", copy)
+    @staticmethod
+    def search_student_in_sheet(students_from_copy, students_from_sheet):
+        students = [] 
+        for student in students_from_copy:
+            students.extend([student_ws for student_ws in students_from_sheet if student in student_ws])
+        return students
 
-    return alunos
+    @staticmethod
+    def students_without_email(students):
+        no_email = []
+        for student in students:
+            if "@" not in student:
+                no_email.append(student)
+        return no_email
 
+    @staticmethod
+    def students_to_clipboard(students):
+        pyperclip.copy("\n".join(students))
 
-def load_students_from_sheet(sheet):
-    alunos = []
-    last_row = sheet.max_row
-    for i in range(1, last_row):
-        aluno = sheet.cell(row=i, column=1).value
-        alunos.append(aluno)
-    return alunos
+    def execute(self):
+        workbook = openpyxl.load_workbook("emails academicos.xlsx")
+        students_sheet = workbook['Planilha1']
+        students_from_sheet = self.normatize(self.load_students_from_sheet(students_sheet))
+        students = self.extract_students_from_SIGAA()
 
-
-def search_student_in_sheet(copied_students, alunos_from_sheet):
-    alunos = []
-
-    for aluno in copied_students:
-
-        match = [
-                 aluno_ws
-                 for aluno_ws in alunos_from_sheet
-                 if aluno in aluno_ws
-                 ]
-        if not match:
-            continue
-        alunos.append(match[0])
-    return alunos
-
-
-def alunos_without_email(alunos):
-    sem_email = []
-    for aluno in alunos:
-        if "@" not in aluno:
-            sem_email.append(aluno)
-    return sem_email
-
-
-def alunos_to_clipboard(alunos):
-    pyperclip.copy("\n".join(alunos))
-
-
-def execute():
-    global alunos, alunos_s_email
-
-    wb = openpyxl.load_workbook("emails academicos.xlsx")
-    ws_alunos = wb['Planilha1']
-    alunos_from_ws = load_students_from_sheet(ws_alunos)
-    alunos_from_ws = normatizar(alunos_from_ws)
-
-    copied_students = pyperclip.paste()
-    alunos = extract_students_from_copy(copied_students)
-
-    alunos_para_copiar = search_student_in_sheet(alunos, alunos_from_ws)
-    alunos_sem_email = alunos_without_email(alunos_para_copiar)
-    alunos_to_clipboard(alunos_para_copiar)
-    alunos = alunos_para_copiar
-    alunos_s_email = alunos_sem_email
+        self.students = self.search_student_in_sheet(students, students_from_sheet)
+        self.students_without_email = self.students_without_email(self.students)
+        self.students_to_clipboard(self.students)

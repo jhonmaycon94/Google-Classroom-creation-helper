@@ -5,7 +5,7 @@ Author: Jhon Santos
 
 import tkinter as tk
 import tkinter.scrolledtext as scrolledtext
-import class_creation_helper
+from class_creation_helper import GoogleClassCreationHelper
 import openpyxl
 import pyperclip
 
@@ -94,11 +94,12 @@ class Application(tk.Frame):
         self.output_sem_email.configure(state='normal')
         self.output_sem_email.delete('1.0', 'end')
 
-        class_creation_helper.execute()
+        gcch = GoogleClassCreationHelper(pyperclip.paste())
+        gcch.execute()
 
         # Alunos TextArea
         qtd = 0
-        for aluno in class_creation_helper.alunos:
+        for aluno in gcch.students:
             qtd += 1
             self.output_txt.insert('end', str(qtd)+".  "+aluno+"\n\n")
         self.output_txt.configure(state='disabled')
@@ -106,7 +107,7 @@ class Application(tk.Frame):
 
         # Alunos sem email TextArea
         qtd = 0
-        for aluno in class_creation_helper.alunos_s_email:
+        for aluno in gcch.students_without_email:
             qtd += 1
             self.output_sem_email.insert('end', str(qtd)+".  "+aluno+"\n\n")
         self.output_sem_email.configure(state='disabled')
