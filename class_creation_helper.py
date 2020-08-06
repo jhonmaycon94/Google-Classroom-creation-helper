@@ -7,9 +7,10 @@ import openpyxl
 class GoogleClassCreationHelper:
 
     @staticmethod
-    def normatize(students): 
+    def normatize(students):
+        """ Recebe uma lista de nomes de estudantes
+        e retorna os nomes sem acentos e cedilhas""" 
         for indice, student in enumerate(students):
-            # tira acentos e ç dos nomes dos alunos
             student = unicodedata.normalize(
                 "NFKD", student.strip()).encode(
                     "ascii", "ignore").decode("ascii")
@@ -18,15 +19,10 @@ class GoogleClassCreationHelper:
         return students
 
     def extract_students_from_SIGAA(self, clipboard_copy):
-        # Regex para extrair todos alunos do integrado/subsequente
+        """ Recebe a tabela de listagem dos alunos da turma no SIGAA
+        e retorna somente o nome dos alunos"""
         students = re.findall(r"(\b[A-Z][^\d]{1,}\t\t)", clipboard_copy)
         students = self.normatize(students)
-
-        '''
-        Se não conseguir extrair alunos da string,
-        checa se os alunos são de engenharia
-        usando uma Regex diferente
-        '''
         if not students:
             clipboard_copy = self.normatize(str(clipboard_copy).split("\n"))
             clipboard_copy = "\n".join(clipboard_copy)
@@ -35,6 +31,8 @@ class GoogleClassCreationHelper:
 
     @staticmethod
     def load_students_from_sheet():
+        """Carrega estudantes da planilha 
+        que serve como base de dados dos emails dos alunos"""
         workbook = openpyxl.load_workbook("emails academicos.xlsx")
         sheet = workbook['Planilha1']
         students = []
@@ -46,6 +44,8 @@ class GoogleClassCreationHelper:
 
     @staticmethod
     def search_student_in_sheet(students_from_copy, students_from_sheet):
+        """ procura os estudantes extraídos da cópia do SIGAA
+        na planilha com os emails"""
         students = [] 
         for student in students_from_copy:
             students.extend([student_ws for student_ws in students_from_sheet if student in student_ws])
@@ -53,6 +53,7 @@ class GoogleClassCreationHelper:
 
     @staticmethod
     def students_without_email(students):
+        """Verifica se o email do estudante está na planilha"""
         no_email = []
         for student in students:
             if "@" not in student:
@@ -61,6 +62,7 @@ class GoogleClassCreationHelper:
 
     @staticmethod
     def students_to_clipboard(students):
+        """cola a lista de estudantes para área de transferência"""
         pyperclip.copy("\n".join(students))
 
     def execute(self):
