@@ -9,7 +9,7 @@ class GoogleClassCreationHelper:
     @staticmethod
     def normatize(students):
         """ Recebe uma lista de nomes de estudantes
-        e retorna os nomes sem acentos e cedilhas""" 
+        e retorna os nomes sem acentos e cedilhas"""
         for indice, student in enumerate(students):
             student = unicodedata.normalize(
                 "NFKD", student.strip()).encode(
@@ -31,7 +31,7 @@ class GoogleClassCreationHelper:
 
     @staticmethod
     def load_students_from_sheet():
-        """Carrega estudantes da planilha 
+        """Carrega estudantes da planilha
         que serve como base de dados dos emails dos alunos"""
         workbook = openpyxl.load_workbook("emails academicos.xlsx")
         sheet = workbook['Planilha1']
@@ -46,9 +46,15 @@ class GoogleClassCreationHelper:
     def search_student_in_sheet(students_from_copy, students_from_sheet):
         """ procura os estudantes extraídos da cópia do SIGAA
         na planilha com os emails"""
-        students = [] 
+        students = []
         for student in students_from_copy:
-            students.extend([student_ws for student_ws in students_from_sheet if student in student_ws])
+            students.extend(
+                [
+                    student_ws
+                    for student_ws in students_from_sheet
+                    if student in student_ws
+                ]
+            )
         return students
 
     @staticmethod
@@ -69,6 +75,23 @@ class GoogleClassCreationHelper:
         students_from_sheet = self.normatize(self.load_students_from_sheet())
         students = self.extract_students_from_SIGAA(pyperclip.paste())
 
-        self.students = self.search_student_in_sheet(students, students_from_sheet)
-        self.students_without_email = self.students_without_email(self.students)
+        self.students = self.search_student_in_sheet(
+            students, students_from_sheet)
+        self.students_without_email = self.students_without_email(
+            self.students)
         self.students_to_clipboard(self.students)
+
+
+if __name__ == "__main__":
+    obj = GoogleClassCreationHelper()
+    obj.execute()
+    if obj.students:
+        print("Alunos copiados para Área de Transferência:\n")
+        for student in obj.students:
+            print(student)
+        if obj.students_without_email:
+            print("Alunos sem email:\n")
+            for student in obj.students_without_email:
+                print(student)
+    else:
+        print("ERRO! Nenhum estudante copiado para área de trasferência")
