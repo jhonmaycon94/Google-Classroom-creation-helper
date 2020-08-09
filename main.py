@@ -28,62 +28,67 @@ class Application(tk.Frame):
 
         # Label
         self.output_lb = tk.Label(
-                            self.mainFrame,
-                            text="""Lista de alunos copiados para área de transferencia:""",
-                            font=('Swis721 Blk BT', 9),
-                            anchor=tk.W,
-                            bg='#0F59A8',
-                            fg='white',
-                            padx=5
-                            )
+            self.mainFrame,
+            text="""Lista de alunos copiados para área de transferência:""",
+            font=('Swis721 Blk BT', 9),
+            anchor=tk.W,
+            bg='#0F59A8',
+            fg='white',
+            padx=5
+            )
         self.output_lb.pack(anchor=tk.SW, pady=(10, 0), padx=20)
 
         # TextArea
-        self.output_txt = scrolledtext.ScrolledText(self.mainFrame,
-                                                    width=60,
-                                                    height=16,
-                                                    font=(
-                                                        'Nirmala UI', 8
-                                                        ),
-                                                    pady=10,
-                                                    padx=10,
-                                                    bg='#CCDBDB',
-                                                    borderwidth=1,
-                                                    relief='sunken')
+        self.output_txt = scrolledtext.ScrolledText(
+            self.mainFrame,
+            width=60,
+            height=16,
+            font=(
+                'Nirmala UI', 8
+                ),
+            pady=10,
+            padx=10,
+            bg='#CCDBDB',
+            borderwidth=1,
+            relief='sunken')
         self.output_txt.configure(state='disabled')
         self.output_txt.pack(padx=20, fill=tk.X)
 
         # Label
-        self.lb_sem_email = tk.Label(self.mainFrame,
-                                     text='Alunos sem email : ',
-                                     font=('Swis721 Blk BT', 10),
-                                     bg='red',
-                                     fg='white'
-                                     )
+        self.lb_sem_email = tk.Label(
+            self.mainFrame,
+            text='Alunos sem email : ',
+            font=('Swis721 Blk BT', 10),
+            bg='red',
+            fg='white'
+        )
         self.lb_sem_email.pack(anchor=tk.W, padx=20, pady=(50, 0))
 
         # TextArea
-        self.output_sem_email = scrolledtext.ScrolledText(self.mainFrame,
-                                                          width=50,
-                                                          pady=10,
-                                                          padx=10,
-                                                          font=(
-                                                              'Nirmala UI', 8
-                                                                ),
-                                                          height=10,
-                                                          bg='#CCDBDB',
-                                                          borderwidth=1,
-                                                          relief='sunken')
+        self.output_sem_email = scrolledtext.ScrolledText(
+            self.mainFrame,
+            width=50,
+            pady=10,
+            padx=10,
+            font=(
+                'Nirmala UI', 8
+                ),
+            height=10,
+            bg='#CCDBDB',
+            borderwidth=1,
+            relief='sunken'
+            )
         self.output_sem_email.configure(state='disabled')
         self.output_sem_email.pack(side=tk.LEFT, pady=(0, 20), padx=(20, 0))
 
         # Button
-        self.magic_button = tk.Button(self.mainFrame,
-                                      text="RUN",
-                                      bg='#CCDBDB',
-                                      command=self.process,
-                                      font=('Swis721 Blk BT', 10),
-                                      )
+        self.magic_button = tk.Button(
+            self.mainFrame,
+            text="RUN",
+            bg='#CCDBDB',
+            command=self.process,
+            font=('Swis721 Blk BT', 10),
+        )
         self.magic_button.pack(side=tk.RIGHT, padx=100, anchor=tk.S, pady=20)
 
     def process(self):
